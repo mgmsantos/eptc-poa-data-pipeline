@@ -1,0 +1,29 @@
+name: Pipeline EPTC Porto Alegre
+on:
+  # Roda automaticamente todo dia 5 de cada mês às 08:00 UTC (05:00 Brasília)
+  schedule:
+    - cron: "0 8 5 * *"
+  # Habilita um botal manual na aba Actions para testar quando quiser
+  workflow_dispatch:
+
+jobs:
+  executar-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Executar pipeline (Bronze -> Silver -> Postgres)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python -m src.main
