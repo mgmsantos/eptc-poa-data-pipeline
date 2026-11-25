@@ -68,16 +68,38 @@ def limpar_base_acidentes(df_input: pd.DataFrame) -> pd.DataFrame:
 
     df = df.rename(
         columns={
+            "log1": "logradouro_1",
+            "log2": "logradouro_2",
+            "predial1": "numero_logradouro",
+            "queda_arr": "queda_arroio",
+            "tipo_acid": "tipo_acidente",
             "auto": "carro_passeio",
             "onibus_urb": "onibus_urbano",
             "onibus_met": "onibus_metropolitano",
             "onibus_int": "onibus_interurbano",
             "outro": "outro_veiculo",
+            "feridos_gr": "feridos_graves",
+            "morte_post": "morte_posterior",
+            "fatais": "morte_fatal",
+            "cont_vit": "houve_vitima",
+            "ups": "unidade_padrao_severidade"
         }
     )
 
     if "consorcio" in df.columns:
-        df["consorcio"] = df["consorcio"].fillna("NÃO SE APLICA")
+        df["consorcio"] = df["consorcio"].fillna("Não se aplica")
+
+    col_capitalize = [
+        "sexo",
+        "condicao_vitima",
+        "regiao",
+        "tipo_acidente",
+        "periodo_dia",
+        "tipo_veiculo",
+    ]
+    for col in col_capitalize:
+        if col in df.columns:
+            df[col] = df[col].str.capitalize()
 
     return df
 
@@ -100,6 +122,8 @@ def limpar_base_vitimas(df_input: pd.DataFrame) -> pd.DataFrame:
             "fx_et": "faixa_etaria",
             "tipo_veic": "tipo_veiculo",
             "periododia": "periodo_dia",
+            "log1": "logradouro_1",
+            "log2": "logradouro_2"
         }
     )
 
@@ -136,7 +160,7 @@ def limpar_base_vitimas(df_input: pd.DataFrame) -> pd.DataFrame:
     df = _converter_para_int64(df, ["id_acidente", "idade", "predial1"])
 
     if "consorcio" in df.columns:
-        df["consorcio"] = df["consorcio"].fillna("NÃO SE APLICA")
+        df["consorcio"] = df["consorcio"].fillna("Não se aplica")
 
     return df
 
